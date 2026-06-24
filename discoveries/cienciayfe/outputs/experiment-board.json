@@ -1,0 +1,44 @@
+{
+  "hypotheses": [
+    {
+      "id": "H-01",
+      "risk": "alto",
+      "assumption": "La migración de calificaciones del esquema fragmentado actual al esquema centralizado puede realizarse sin pérdida ni corrupción de datos.",
+      "hypothesis": "Creemos que el equipo de desarrollo podrá migrar el 100% de los registros de calificaciones sin pérdida ni error de integridad, si realiza una auditoría de las tablas fuente y un dry-run de migración sobre una copia del esquema antiguo, porque si los datos en origen tienen inconsistencias estructurales ningún script de migración las resolverá automáticamente.",
+      "metric": "Porcentaje de registros de calificaciones migrados correctamente sin errores de integridad referencial respecto al total de registros en el sistema antiguo.",
+      "threshold": "95% o más de los registros migrados sin errores de integridad en un ciclo de prueba de 3 días.",
+      "experiment": "Auditoría de datos + migración en seco (dry run): ejecutar el script de migración sobre una copia del esquema antiguo y comparar el conteo y los valores de calificaciones antes y después.",
+      "decision": "Si pasa (>= 95% sin errores) → continuar con la migración real al esquema nuevo; si falla → auditar las tablas fuente para identificar inconsistencias, agregar scripts de limpieza al plan y repetir el dry-run antes de migrar en producción."
+    },
+    {
+      "id": "H-02",
+      "risk": "alto",
+      "assumption": "El equipo de dos desarrolladores puede completar el módulo de reportes dinámicos y la migración de BD antes del cierre del período 2025-2026, trabajando en paralelo con las entregas urgentes actuales.",
+      "hypothesis": "Creemos que el equipo de dos desarrolladores completará el módulo de reportes dinámicos dentro del plazo del período 2025-2026, si se desglosan las tareas en unidades de 2 días y se traza una ruta crítica explícita, porque sin un plan detallado no es posible detectar a tiempo si el ritmo actual lleva a un incumplimiento.",
+      "metric": "Número de días de retraso acumulado sobre la ruta crítica del módulo al finalizar la primera semana de desarrollo activo.",
+      "threshold": "0 días de retraso acumulado al cierre de la primera semana de desarrollo; la ruta crítica cabe en el plazo real disponible.",
+      "experiment": "Sprint de estimación de 1 día: los dos desarrolladores desglosan las tareas del módulo en sub-tareas de máximo 2 días, estiman la ruta crítica y la comparan con la fecha límite real del cierre de período.",
+      "decision": "Si pasa (ruta crítica cabe en el plazo) → arrancar el desarrollo con el alcance completo; si falla → pivotar: reducir el alcance del MVP (posponer lógica de escalas complejas o nómina de abanderados) o negociar con la rectora un plazo mayor antes de comprometerse."
+    },
+    {
+      "id": "H-03",
+      "risk": "medio",
+      "assumption": "La secretaria puede especificar los requerimientos de formato de los reportes con suficiente claridad para que los desarrolladores los implementen sin reversiones.",
+      "hypothesis": "Creemos que la secretaria aprobará un prototipo de reporte con un máximo de 1 ciclo de revisión, si se le presenta una plantilla de especificación estructurada con campos predefinidos (nombres de materias, escalas, ubicación de firmas y sellos, jerarquía visual), porque el historial de reversiones evidenciado proviene de requerimientos ambiguos, no de incompetencia técnica.",
+      "metric": "Número de ciclos de revisión necesarios para que la secretaria apruebe el primer prototipo de reporte sin cambios pendientes.",
+      "threshold": "1 o menos ciclos de revisión para aprobación del prototipo en un plazo de 5 días hábiles.",
+      "experiment": "Mago de Oz / Concierge: presentar a la secretaria un borrador de reporte generado con datos reales (incluso en Word o PDF manual) y recoger su feedback usando una plantilla de especificación estructurada.",
+      "decision": "Si pasa (<= 1 ciclo) → adoptar la plantilla de especificación como proceso estándar para futuros cambios; si falla → realizar una sesión de co-diseño del formato con la secretaria antes de implementar, y documentar los criterios de aceptación de forma más granular."
+    },
+    {
+      "id": "H-04",
+      "risk": "medio",
+      "assumption": "Los lineamientos académicos del Ministerio de Educación no cambiarán durante el ciclo de desarrollo del módulo, de modo que las escalas y formatos diseñados serán válidos al momento de la entrega.",
+      "hypothesis": "Creemos que los lineamientos vigentes del Ministerio se mantendrán estables durante el ciclo de desarrollo (máximo 3 meses), si se verifica la fecha de la última actualización oficial y se consulta con la rectora si hay cambios previstos para el período 2025-2026, porque actuar sobre lineamientos ya desactualizados invalida el trabajo de plantillas.",
+      "metric": "Número de cambios de lineamientos oficiales del Ministerio de Educación notificados o publicados durante los 3 meses de desarrollo del módulo.",
+      "threshold": "0 cambios de lineamientos notificados en los próximos 3 meses según la consulta inicial.",
+      "experiment": "Entrevista dirigida a la rectora sobre la agenda de cambios del Ministerio, complementada con revisión del portal oficial de Educación para detectar circulares o resoluciones pendientes.",
+      "decision": "Si pasa (0 cambios previstos) → diseñar las plantillas con las escalas actuales vigentes; si falla → diseñar las plantillas con un mecanismo de configuración de escalas versionado, priorizando la parametrización sobre la codificación directa."
+    }
+  ]
+}

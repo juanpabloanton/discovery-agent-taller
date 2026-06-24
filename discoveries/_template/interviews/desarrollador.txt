@@ -1,0 +1,35 @@
+desarrollador-1: como podemos hacer esto o como nos organizamos
+desarrollador-2: tu encargate de los cuadros y yo me encargo de las promociones
+desarrollador-1: el desarrollador 1 procede hacer los cuadros y los requerimientos tomados de secreataria aunque sea complicado por como esta guardado la informacio
+hecho los sp que aveces son 30k de lineas con if anidados y varios rdlc por cada curso ya no esta standarizad cada curso tiene rdlc y para modificar un curso hay que hacer 
+bastantes es decir es tedioso ya que el editor rldc no es amigable si se mueve una cosa se mueve todo
+desarrollador-2: procede con las modificaciones y requerimientos de las promociones asi mismo se demoro por que cada curso tiene plantillas distintas donde los nombres de las materias
+estan quemados y no esta centralizada la informacion en la base.
+desarrollador-2: procede a crear la infraestructura basica del sistema (base de configuracion - base de datos con tablas roles - permisos - usuario- personas - relaciones - menu - y tablas que son de persona) entre mas tablas es decir hay un avance
+creacion y configuracion del servidor de desarrollo donde estara los ejecutables jar de cada modulo creado
+
+backend-discovery (eureka)
+backend-gateway (login - redis para cachear sesiones)
+
+backend-config
+backend-files
+backend-worker
+
+backend-academico
+backend-frontend
+backend-financiero
+backend-secretaria
+backend-talento-humano
+
+se maneja con contenedores cada uno tiene su dockerfile donde al ejecutar el docker-compose erp-project up -d se levanta el ecosistema 
+donde cada ejecutable es un contenedor y para el front es un contenedor ngnix donde esta el build del front adicional se hizo conffiguraciones en 
+forti para habilitar el puerto 80 , 443 y el 3000 que es para que se levante el front y se creo un subdominio del cpanel en el zone editor del cienciayfe.edu.ec para que sea el ambiente de deesarrollo
+cife-dev.cienciayfe.edu.ec el sistema nuevo se va a crear con la finalidad de corregir todo esto y crear un sistema mantenible tanto en la base de datos como en plantillas que no sean tan repetitivas
+para hacer un cambio entre otras cosas es decir la intencion quitar el sistema antiguo y crear uno nuevo 
+
+
+desarrollador-1: intente hacer los cuadros trimestrales hacerlo dinamico, pero los nombres de las base de datos no coinciden con los del word que estan quemados 
+si hago eel cambio la informacion no coincide y sera mas tedioso , se procede a dejar como estaba ya que no se puede hacer dinamico y eso aplica para trimestrales finales 
+y las promociones.
+
+desarrollador-2: se propone que para el sistema nuevo se va a hacer dinamico y con plantillas mantenibles y dinamicas tanto en materias como diseño por curso 

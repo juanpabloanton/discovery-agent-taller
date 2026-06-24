@@ -1,0 +1,68 @@
+
+
+rectora: La rectora de la institucion converso con nosotros y nos dijo que tenemos que solventar los requerimientos actuales donde el proyecto academico es un .net asp con base de datos sqlserver 
+el area es secretaria que actualmente son 
+
+
+cuadros trimestrales y quimestrales  
+cuadros finales 
+entrega de las promociones 
+
+todos esos documentos tienen que estar firmado por el docente y sellado por el distrito tiene que ser manejado de manera urgente
+esos documeentos son del periodo 2025 - 2026 es para cierre de año esto es prioridad.
+
+despues de a ver entregado eso se requiere hacer la nomina de estudiantes abanderados eso es requerimiento de este periodo 2026-2027 
+
+desarrollador: por parte de nosotros los desarrolladores indicamos qque vamos a trabajar pero comunicamos que varias inconstencias en la base de ddatos y en el codigo
+en el codigo no estan clara la programacion ademas quee mantiene un codigo no mantenible, en la base de datos se maneja por sp la consulta de la informacion
+de tal forma que un sp llama a otro sp y hay querys mal generados y sp de 30 lineas donde se arregla una cosa y se daña otra, la informacion no esta centralizada en la basee
+cada tabla es distinta a otra no hay un esquema de base dde datos, no existe una sola tabla de calificaciones si no que de una se saca inicial y en otra se saca la de los otros cursos
+y los sp no todo sp se reutiliza si no que se crea uno nuevo y eso dificulta todo por que la misma informacion que deberia estar en un reporte no lo esta por otro lado las plantillas
+por cada curso hay una plantilla en los cuadros de calificaciones promociones y cuadros finales donde manualmente hay que hacer los cambios por archivos y eso genera tiempo en especial los RDLC que se maneja 
+en cada cuadro trimestal y final cada curso tiene su rdlc ya que el ministerio de educacion es cambiante y no ha habido un standar
+
+una vez culminado eso se procedera a realizar un proyecto para remplazar el actual y que ya no pasen este tipo de problema es decir desde cero yo como desarollador estoy proponiendo un sistema academico hecho en 
+
+React 18
+Ant Design 5
+
+Java 21 LTS
+Spring Boot 3.5.x
+Spring Security 6
+Spring Data JPA
+
+PostgreSQL 16.8
+
+Apache POI 5.4.x
+JasperReports 7.x
+
+Docker
+Git
+Maven 3.9.x
+
+creando varios proyectos necesarios 
+
+backend-discovery (eureka)
+backend-gateway (login - redis para cachear sesiones)
+
+backend-config
+backend-files
+backend-worker
+
+backend-academico
+backend-financiero
+backend-secretaria
+backend-talento-humano
+
+y uso de rabbit mq
+
+donde se realizara una base de configuracion y esa va a apuntar a la base final como medida de seguridad y se usara ngnix para leer el build  de react , configurar 2 servidor ubuntu server con todas las herramientas mencionadas uno con despliegue automatizado CI/DI en git y el otro para rcibir los ejecutables es decir armar la arquitectura 
+creacion de base de datos postgres donde se va a ser el nuevo sistema
+
+
+adicional hay quee cumplir con el reglamento de ley de proteccion de datos personalees como linieamiento y analizar el lineamiento del ministerio academico actual para el desarrollo de la logica del sistema ACADEMICO NUEVO
+
+pero antes de culminar lo nuevo es necesario tener estable lo antiguo para dedicarnos de lleno con esto es decir hacer estable el academico actual legacy 
+re estructurar la pagina de wordpress cienciayfe.edu.ec y vincular al sistema academico actual donde es necesario hacer mejoras visuales , rendimiento ademas que actualmente 
+hay dos sistemas el sggm-acad que es el interno y uno externo que es www.cife.edu.ec quisiera dar de baja ese sistema y dejar el sggm-acad para solo dar mantenimiento a un solo sistema 
+y no a dos asi poder tener eficiencia en algun requerimiento interno.
