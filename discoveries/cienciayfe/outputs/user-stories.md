@@ -1,110 +1,53 @@
-# User Stories — Ciencia y Fe
+# User Stories — discovery cienciayfe
 
-Historias priorizadas por el núcleo de valor: generar reportes académicos
-correctos y consistentes para el cierre del período 2025-2026.
-
----
-
-## Secretaria
-
-- **[US-01]** Como secretaria, quiero que los cuadros de calificaciones muestren
-  los nombres de las materias leídos dinámicamente desde la base de datos, para
-  no tener que detectar ni corregir inconsistencias de nombres manualmente.
-  - Criterios de aceptación:
-    - Dado que se genera un cuadro trimestral, cuando el sistema lo produce,
-      entonces los nombres de las materias coinciden exactamente con los
-      registrados en la BD, sin valores hardcoded en la plantilla.
-    - Dado que un nombre de materia cambia en la BD, cuando se regenera el
-      reporte, entonces el cambio se refleja sin tocar la plantilla.
-  - Fuente: `secretaria.md`, `desarrollador.md`
-
-- **[US-02]** Como secretaria, quiero que corregir el layout o los datos de un
-  reporte no altere los demás reportes del mismo período, para poder revisar cada
-  documento de forma independiente.
-  - Criterios de aceptación:
-    - Dado que se corrige el cuadro trimestral, cuando se regenera, entonces el
-      reporte de promoción y el cuadro final mantienen su layout sin cambios.
-    - Dado que se actualiza el cuadro final, cuando se comparan con el reporte de
-      promoción, entonces los nombres de materias y valores coinciden en ambos.
-  - Fuente: `secretaria.md`
-
-- **[US-03]** Como secretaria, quiero que los cuadros y reportes de promoción
-  incluyan espacios designados para la firma del docente y dos sellos (colegio y
-  distrito), para poder enviarlos al distrito sin modificaciones manuales en el
-  documento.
-  - Criterios de aceptación:
-    - Dado que se genera cualquier reporte, cuando se visualiza o imprime, entonces
-      aparecen los espacios de firma del docente y los dos sellos (colegio,
-      distrito) en la posición definida por el formato institucional.
-    - Dado que el reporte contiene calificaciones de segundo a bachillerato, cuando
-      se envía al distrito, entonces el formato cumple los requisitos del distrito
-      sin edición adicional.
-  - Fuente: `secretaria.md`, `rectora.md`
-
-- **[US-04]** Como secretaria, quiero que las escalas de calificación y de
-  comportamiento se muestren con jerarquía visual menor que los datos de
-  calificaciones, para que la información principal sea fácil de leer en el
-  reporte impreso.
-  - Criterios de aceptación:
-    - Dado que se genera un cuadro, cuando se imprime, entonces la sección de
-      calificaciones ocupa más espacio visual que la sección de escalas de
-      comportamiento.
-    - Dado que el reporte es de nivel inicial o básica inferior, cuando se
-      visualiza, entonces la escala cualitativa/simbólica aparece en tamaño
-      secundario, no dominante.
-  - Fuente: `secretaria.md`
+> **Alcance:** estas historias cubren el MVP del módulo de reportes académicos.
+> Se priorizan por impacto en el ciclo de devoluciones que afecta a las tres personas.
 
 ---
 
-## Desarrollador
-
-- **[US-05]** Como desarrollador, quiero una plantilla de reporte única y
-  configurable por nivel/curso, para que cuando el Ministerio cambie los
-  lineamientos solo tenga que actualizar un archivo y el cambio se propague a
-  todos los cursos.
+- **[US-01]** Como secretaria, quiero que los nombres de las materias sean idénticos en el cuadro de calificaciones, el cuadro final y el acta de promoción, para aprobar los reportes en la primera revisión sin necesidad de devolverlos.
   - Criterios de aceptación:
-    - Dado que existen N cursos, cuando se genera cualquier reporte, entonces
-      todos comparten la misma plantilla base con parámetros por curso (no RDLC
-      separados por curso).
-    - Dado que se modifica la configuración de una materia en un curso, cuando se
-      regeneran los reportes de ese curso, entonces el cambio se refleja sin tocar
-      plantillas de otros cursos.
-  - Fuente: `desarrollador.md`, `rectora.md`
-
-- **[US-06]** Como desarrollador, quiero un esquema de base de datos centralizado
-  para calificaciones con una tabla unificada, para poder escribir una sola lógica
-  de consulta que sirva a todos los reportes sin duplicar stored procedures.
-  - Criterios de aceptación:
-    - Dado que se consultan calificaciones de cualquier curso, cuando se ejecuta
-      la consulta, entonces proviene de la misma tabla/vista unificada.
-    - Dado que se agrega un nuevo tipo de reporte, cuando se implementa, entonces
-      reutiliza la lógica de consulta existente sin crear un nuevo SP.
-  - Fuente: `desarrollador.md`, `rectora.md`
+    - Dado que existe un cuadro trimestral y un acta de promoción del mismo nivel, cuando la secretaria los compara, entonces todos los nombres de materia coinciden exactamente entre ambos documentos.
+    - Dado que el desarrollador cambia el nombre de una materia en la base de datos, cuando se regeneran los reportes, entonces el cambio aparece en el cuadro trimestral, el cuadro final y el acta de promoción sin intervención manual adicional.
+  - Fuente: secretaria.md, desarrollador.md
 
 ---
 
-## Rectora
-
-- **[US-07]** Como rectora, quiero que los cuadros trimestrales, finales y
-  reportes de promoción del período 2025-2026 estén disponibles y correctos antes
-  del cierre de período, para cumplir los compromisos con el distrito a tiempo.
+- **[US-02]** Como secretaria, quiero generar cuadros trimestrales con escala cualitativa (AA+, A-, B-) para básica de 1.° a 4.° y escala cuantitativa (numérica) para 5.° en adelante, para que los cuadros cumplan la normativa vigente del Ministerio de Educación.
   - Criterios de aceptación:
-    - Dado que es el cierre del período 2025-2026, cuando la secretaria revisa los
-      reportes generados, entonces los aprueba sin devoluciones por inconsistencias
-      de nombres o layout roto.
-    - Dado que los reportes de segundo a bachillerato son los críticos, cuando se
-      generan, entonces están listos antes que los de inicial y básica inferior.
-  - Fuente: `rectora.md`, `secretaria.md`
+    - Dado un cuadro de un curso de básica de 1.° a 4.°, cuando se genera el reporte, entonces las calificaciones aparecen en escala cualitativa (AA+, A-, B-) y no en formato numérico.
+    - Dado un cuadro de un curso de 5.° o superior, cuando se genera el reporte, entonces las calificaciones aparecen en formato numérico.
+    - Dado un cuadro de cualquier nivel, cuando se genera el reporte, entonces el cuadro de comportamiento aparece en escala visual reducida, sin opacar la información académica principal.
+  - Fuente: secretaria.md
 
-- **[US-08]** Como rectora, quiero que la lógica de calificaciones aplique
-  automáticamente la escala correcta según el nivel educativo (cualitativa en
-  inicial, simbólica hasta segundo, cuantitativa de tercero en adelante), para
-  no requerir ajustes manuales al cambiar de nivel.
+---
+
+- **[US-03]** Como secretaria, quiero que los cuadros de calificaciones y actas de promoción incluyan el espacio designado para la firma del docente y los dos sellos (colegio y distrito), para que los documentos sean formalmente válidos al enviarse al distrito educativo.
   - Criterios de aceptación:
-    - Dado que se genera un cuadro de inicial, cuando se visualiza, entonces
-      muestra escalas cualitativas sin calificaciones numéricas.
-    - Dado que se genera un cuadro de básica superior o bachillerato, cuando se
-      visualiza, entonces muestra calificaciones numéricas en la escala definida.
-    - Dado que se genera un cuadro de primero o segundo de básica, cuando se
-      visualiza, entonces muestra la escala simbólica (+A / −A / B−) definida.
-  - Fuente: `secretaria.md`, `rectora.md`
+    - Dado un reporte generado (trimestral, final o acta de promoción), cuando se imprime, entonces contiene una sección visible con línea de firma del docente, un espacio para el sello del colegio y un espacio para el sello del distrito.
+    - Dado que se genera el reporte para niveles de 2.° a bachillerato, cuando se valida el documento, entonces los espacios de firma y sellos están ubicados de forma que no colisionan con la información académica.
+  - Fuente: secretaria.md
+
+---
+
+- **[US-04]** Como desarrollador, quiero que los nombres de las materias se extraigan dinámicamente de la base de datos en todos los reportes, para poder corregir o actualizar una materia en un solo lugar y que el cambio se refleje automáticamente en todos los documentos.
+  - Criterios de aceptación:
+    - Dado que la base de datos contiene la tabla maestra de materias por nivel, cuando se genera cualquier reporte (trimestral, final, promoción), entonces los nombres de las materias provienen de esa tabla y no están codificados en la plantilla.
+    - Dado que se modifica el nombre de una materia en la tabla maestra, cuando se regenera cualquier reporte que contenga esa materia, entonces el nuevo nombre aparece sin requerir cambios en la plantilla ni en el código del reporte.
+  - Fuente: desarrollador.md, secretaria.md
+
+---
+
+- **[US-05]** Como desarrollador, quiero una plantilla de reporte parametrizada por nivel educativo (en lugar de una plantilla por curso), para aplicar correcciones en un único lugar sin riesgo de dañar los reportes de otros cursos.
+  - Criterios de aceptación:
+    - Dado que existe un defecto visual en un cuadro trimestral, cuando el desarrollador corrige la plantilla del nivel correspondiente, entonces todos los cursos de ese nivel quedan corregidos y los cuadros de otros niveles no se ven afectados.
+    - Dado que el sistema genera reportes para todos los cursos de básica, cuando se comparan los layouts, entonces todos comparten la misma plantilla base parametrizada (no hay un RDLC separado por curso).
+  - Fuente: desarrollador.md, rectora.md
+
+---
+
+- **[US-06]** Como rectora, quiero que los cuadros trimestrales, cuadros finales y actas de promoción del período 2025-2026 se generen con información correcta y consistente antes del cierre de año, para cumplir con el requerimiento urgente del distrito educativo.
+  - Criterios de aceptación:
+    - Dado que se solicita la generación de los cuadros del período 2025-2026, cuando el sistema los produce, entonces la secretaria los aprueba sin devolución en la primera revisión.
+    - Dado que los documentos deben enviarse al distrito, cuando se revisa el contenido, entonces los cuadros de 2.° a bachillerato están completos, con firmas y sellos, y con nombres de materias consistentes entre cuadro de calificaciones y acta de promoción.
+  - Fuente: rectora.md, secretaria.md

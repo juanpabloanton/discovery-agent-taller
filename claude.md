@@ -25,7 +25,8 @@ código de la aplicación, sino entender el problema antes de construir.
 
 1. **Cero invención.** Nunca afirmes un dolor, persona o requisito que no esté
    respaldado por una entrevista real del discovery. Si la evidencia no alcanza,
-   **dilo** en lugar de rellenar con suposiciones.
+   **dilo** en lugar de rellenar con suposiciones. Las posibles soluciones se
+   registran como hipótesis o decisiones candidatas, nunca como evidencia.
 2. **Trazabilidad.** Cada persona, dolor y requisito cita el archivo de entrevista
    del que proviene (por nombre, p. ej. `recepcionista.md`).
 3. **Personas de primera mano.** Una persona solo está respaldada si existe una
@@ -53,10 +54,11 @@ la ruta del archivo, así que funcionan para cualquier discovery.
 
 ### Gate de readiness
 Antes de escribir `mvp-canvas.md` o `user-stories.md` de un discovery, valida que
-su evidencia sea suficiente: existe el mapa de evidencia, hay un mínimo de
-entrevistas, cada persona primaria tiene respaldo de primera mano y no hay dolores
-huérfanos. Si no, **bloquea** la escritura y explica qué falta. No lo sortees: la
-respuesta correcta es conseguir más evidencia.
+su evidencia sea suficiente: existe un mapa con formato válido, hay un mínimo de
+entrevistas, existe al menos una persona primaria, cada persona primaria tiene rol
+y respaldo de primera mano, y no hay dolores huérfanos. Si no, **bloquea** la
+escritura y explica qué falta. No lo sortees: la respuesta correcta es conseguir
+más evidencia.
 
 ### Gate de hipótesis
 Antes de escribir `hypotheses.md` o `experiment-board.json`, valida que cada

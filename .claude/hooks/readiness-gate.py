@@ -131,6 +131,13 @@ def main():
     pains = evidence.get("pains", [])
     problems = []
 
+    if not isinstance(personas, list) or not isinstance(pains, list):
+        fail(["  evidence-map.json debe contener arreglos `personas` y `pains`."])
+
+    primary_personas = [p for p in personas if isinstance(p, dict) and p.get("primary") is True]
+    if not primary_personas:
+        problems.append("  • El mapa no declara ninguna persona primaria; no se puede justificar un MVP.")
+
     fp_roles, interview_count = first_person_roles_on_disk(interviews_dir)
     if interview_count < MIN_INTERVIEWS:
         problems.append(
@@ -139,17 +146,25 @@ def main():
         )
 
     for p in personas:
-        if not p.get("primary", True):
+        if not isinstance(p, dict):
+            problems.append("  • Hay una persona con formato inválido (debe ser un objeto JSON).")
+            continue
+        if p.get("primary") is not True:
             continue
         name = p.get("name", "(sin nombre)")
         role = (p.get("role") or "").strip().lower()
-        if role and role not in fp_roles:
+        if not role:
+            problems.append(f"  • Persona primaria «{name}» no declara `role`.")
+        elif role not in fp_roles:
             problems.append(
                 f"  • Persona «{name}» (rol: {role}) no tiene una entrevista "
                 f"en primera persona en disco. Está construida de oídas."
             )
 
     for d in pains:
+        if not isinstance(d, dict):
+            problems.append("  • Hay un dolor con formato inválido (debe ser un objeto JSON).")
+            continue
         src = (d.get("source") or "").strip()
         pid = d.get("id", "(dolor sin id)")
         if not src:

@@ -1,136 +1,62 @@
-# Hipótesis y experimentos — Ciencia y Fe
+# Hipótesis y experimentos — discovery cienciayfe
 
-Supuestos riesgosos del MVP Canvas convertidos en hipótesis falsables,
-ordenados de mayor a menor riesgo.
+> Ordenadas de mayor a menor riesgo. Se prueba primero lo que más puede tumbar el MVP.
 
 ---
-
-## Árbol de decisión general
 
 ```mermaid
 flowchart TD
   classDef test fill:#E2EAF3,stroke:#1A4E8A,color:#0E1A26;
-  classDef ok   fill:#E3F1E8,stroke:#2E7D52,color:#0E1A26;
-  classDef no   fill:#F6E2DD,stroke:#B3402F,color:#0E1A26;
+  classDef ok fill:#E3F1E8,stroke:#2E7D52,color:#0E1A26;
+  classDef no fill:#F6E2DD,stroke:#B3402F,color:#0E1A26;
+  classDef warn fill:#FDF3DC,stroke:#9A6605,color:#0E1A26;
 
-  H1["H-01: ¿Los datos migran limpios?"]:::test
-  H1 -->|">= 95% sin errores"| H1OK["Continuar migración real"]:::ok
-  H1 -->|"< 95%"| H1NO["Limpiar datos fuente y repetir dry-run"]:::no
+  H1["H-01 ⚠ ALTO\nNombres en BD aceptables"]:::test
+  H2["H-02 ⚠ ALTO\nCentralización sin pérdida"]:::test
+  H3["H-03 ▲ MEDIO\nNombres = bloqueador principal"]:::test
 
-  H2["H-02: ¿El equipo tiene capacidad de entregar a tiempo?"]:::test
-  H2 -->|"Ruta crítica cabe en plazo"| H2OK["Arrancar desarrollo completo"]:::ok
-  H2 -->|"No cabe"| H2NO["Reducir alcance o renegociar plazo"]:::no
+  H1 -->|"≥ 85 % correctos"| OK1["Fuente maestra activada\n→ Construir extracción dinámica"]:::ok
+  H1 -->|"< 85 % correctos"| NO1["Crear interfaz de\nadministración de materias primero"]:::no
 
-  H3["H-03: ¿La secretaria especifica con claridad?"]:::test
-  H3 -->|"<= 1 ciclo de revisión"| H3OK["Adoptar plantilla de especificación"]:::ok
-  H3 -->|"> 1 ciclo"| H3NO["Co-diseño del formato con secretaria"]:::no
+  H2 -->|"100 % recuperado\npara ≥ 3 niveles"| OK2["Avanzar con\ntabla centralizada"]:::ok
+  H2 -->|"Pérdida o duplicados"| NO2["Centralización incremental\npor niveles prioritarios"]:::no
 
-  H4["H-04: ¿El Ministerio no cambiará lineamientos?"]:::test
-  H4 -->|"0 cambios previstos"| H4OK["Diseñar con escalas actuales"]:::ok
-  H4 -->|"Cambios previstos"| H4NO["Parametrizar escalas de forma versionada"]:::no
+  H3 -->|"0 devoluc. por nombres\n≤ 1 por otra causa"| OK3["Comprometer 90 %\nde primera revisión"]:::ok
+  H3 -->|"Otros bloqueadores\nfrecuentes"]| NO3["Ampliar scope del MVP\nrevisar US-01 a US-05"]:::warn
 ```
 
 ---
 
-### [H-01] Limpieza de datos en la migración — riesgo: alto
+### [H-01] Nombres de materias en BD aceptables como fuente única — riesgo: alto
 
-- **Supuesto a probar:** La migración de calificaciones del esquema fragmentado
-  actual al esquema centralizado puede realizarse sin pérdida ni corrupción de
-  datos.
-- **Hipótesis:** Creemos que el equipo de desarrollo podrá migrar el 100% de los
-  registros de calificaciones sin pérdida ni error de integridad, si realiza una
-  auditoría de las tablas fuente y un dry-run de migración sobre una copia del
-  esquema antiguo, porque si los datos en origen tienen inconsistencias
-  estructurales ningún script de migración las resolverá automáticamente.
-- **Señal medible:** Porcentaje de registros de calificaciones migrados
-  correctamente sin errores de integridad referencial respecto al total de
-  registros en el sistema antiguo.
-- **Criterio de éxito:** 95% o más de los registros migrados sin errores de
-  integridad en un ciclo de prueba de 3 días.
-- **Experimento:** Auditoría de datos + migración en seco (dry run) — ejecutar el
-  script de migración sobre una copia del esquema antiguo y comparar el conteo y
-  los valores de calificaciones antes y después. Tipo: prototipo técnico desechable.
-- **Caja de tiempo/costo:** Máximo 3 días de trabajo técnico sin costo adicional
-  (usa datos y entorno propios).
-- **Regla de decisión:** Si pasa (>= 95% sin errores) → continuar con la
-  migración real al esquema nuevo. Si falla → auditar las tablas fuente para
-  identificar inconsistencias, agregar scripts de limpieza al plan y repetir el
-  dry-run antes de migrar en producción.
+- **Supuesto a probar:** Los nombres de las materias en la base de datos actual son suficientemente correctos para usarse directamente como fuente única de verdad en todos los reportes, sin limpieza previa masiva.
+- **Hipótesis:** Creemos que la secretaria aceptará los nombres de materias extraídos dinámicamente de la BD si el desarrollador audita y corrige las discrepancias antes de la primera entrega, porque el problema actual es que los nombres están quemados (no se actualizan), no que la BD tenga datos fundamentalmente erróneos.
+- **Señal medible:** Porcentaje de nombres de materias en la BD que coinciden con los esperados por la secretaria para los cuadros del período 2025-2026.
+- **Criterio de éxito:** ≥ 85 % de nombres coinciden o requieren solo corrección menor (capitalización o tildes), verificado en sesión de auditoría de 2 horas.
+- **Experimento:** Auditoría de datos dirigida — el desarrollador extrae la lista de materias de las tablas más usadas en los SP y la presenta a la secretaria para validación nombre a nombre.
+- **Caja de tiempo/costo:** 1 día del desarrollador para extraer y preparar la lista + 2 horas de la secretaria para la revisión.
+- **Regla de decisión:** Si pasa (≥ 85 % aceptables) → centralizar esos nombres como fuente maestra y corregir el resto antes de generar los reportes del MVP. Si falla (< 85 % requieren corrección significativa) → construir primero una interfaz de administración de materias antes de activar la extracción dinámica; no usar la BD actual sin limpieza previa.
 
 ---
 
-### [H-02] Capacidad del equipo para entregar en plazo — riesgo: alto
+### [H-02] Centralización de calificaciones técnicamente viable sin pérdida de datos — riesgo: alto
 
-- **Supuesto a probar:** El equipo de dos desarrolladores puede completar el
-  módulo de reportes dinámicos y la migración de BD antes del cierre del período
-  2025-2026, trabajando en paralelo con las entregas urgentes actuales.
-- **Hipótesis:** Creemos que el equipo de dos desarrolladores completará el módulo
-  de reportes dinámicos dentro del plazo del período 2025-2026, si se desglosan
-  las tareas en unidades de 2 días y se traza una ruta crítica explícita, porque
-  sin un plan detallado no es posible detectar a tiempo si el ritmo actual lleva a
-  un incumplimiento.
-- **Señal medible:** Número de días de retraso acumulado sobre la ruta crítica del
-  módulo al finalizar la primera semana de desarrollo activo.
-- **Criterio de éxito:** 0 días de retraso acumulado al cierre de la primera
-  semana de desarrollo; la ruta crítica cabe en el plazo real disponible.
-- **Experimento:** Sprint de estimación de 1 día — los dos desarrolladores
-  desglosan las tareas del módulo en sub-tareas de máximo 2 días, estiman la ruta
-  crítica y la comparan con la fecha límite real del cierre de período. Tipo:
-  entrevista / sesión de estimación conjunta.
-- **Caja de tiempo/costo:** 1 día de trabajo conjunto de los dos desarrolladores.
-- **Regla de decisión:** Si pasa (ruta crítica cabe en el plazo) → arrancar el
-  desarrollo con el alcance completo del MVP. Si falla → pivotar: reducir el
-  alcance del MVP (posponer lógica de escalas complejas o nómina de abanderados)
-  o negociar con la rectora un plazo mayor antes de comprometerse.
+- **Supuesto a probar:** Es posible crear una vista SQL unificada de calificaciones sobre las tablas existentes sin pérdida de datos del período 2025-2026 en curso, sin necesidad de una migración destructiva.
+- **Hipótesis:** Creemos que el desarrollador podrá recuperar el 100 % de las calificaciones del período actual desde una vista unificada si mapea las tablas existentes de cada nivel, porque aunque las tablas son inconsistentes en estructura, el dato de calificación existe en alguna tabla para cada nivel.
+- **Señal medible:** Porcentaje de calificaciones del período 2025-2026 recuperables correctamente (sin pérdida ni duplicados) desde la vista unificada, comparadas contra los reportes generados por el sistema actual.
+- **Criterio de éxito:** 100 % de calificaciones recuperadas sin pérdida ni duplicados para al menos 3 niveles distintos (básica, media, bachillerato), en un spike de 3 días.
+- **Experimento:** Spike técnico — el desarrollador mapea todas las tablas de calificaciones, documenta sus relaciones y construye una vista SQL de prueba para 3 niveles; compara resultados fila a fila contra los cuadros generados actualmente por el sistema.
+- **Caja de tiempo/costo:** 3 días de trabajo del desarrollador. Sin costo adicional: se trabaja sobre la BD existente en ambiente de desarrollo.
+- **Regla de decisión:** Si pasa (100 % de datos recuperados para ≥ 3 niveles) → avanzar con la tabla centralizada como base del MVP. Si falla (datos faltantes o duplicados) → abordar la centralización por niveles de forma incremental, priorizando los cursos de 2.° a bachillerato que van al distrito; posponer la centralización de inicial y básica baja.
 
 ---
 
-### [H-03] Calidad de especificación de requerimientos de secretaría — riesgo: medio
+### [H-03] Los nombres de materias son el principal bloqueador de las devoluciones — riesgo: medio
 
-- **Supuesto a probar:** La secretaria puede especificar los requerimientos de
-  formato de los reportes con suficiente claridad para que los desarrolladores los
-  implementen sin reversiones.
-- **Hipótesis:** Creemos que la secretaria aprobará un prototipo de reporte con un
-  máximo de 1 ciclo de revisión, si se le presenta una plantilla de especificación
-  estructurada con campos predefinidos (nombres de materias, escalas, ubicación de
-  firmas y sellos, jerarquía visual), porque el historial de reversiones evidenciado
-  proviene de requerimientos ambiguos, no de incompetencia técnica.
-- **Señal medible:** Número de ciclos de revisión necesarios para que la secretaria
-  apruebe el primer prototipo de reporte sin cambios pendientes.
-- **Criterio de éxito:** 1 o menos ciclos de revisión para aprobación del prototipo
-  en un plazo de 5 días hábiles.
-- **Experimento:** Mago de Oz / Concierge — presentar a la secretaria un borrador
-  de reporte generado con datos reales (incluso en Word o PDF manual) y recoger su
-  feedback usando una plantilla de especificación estructurada.
-- **Caja de tiempo/costo:** Máximo 2 días: 1 para preparar el borrador + 1 para la
-  sesión de revisión con la secretaria.
-- **Regla de decisión:** Si pasa (<= 1 ciclo) → adoptar la plantilla de
-  especificación como proceso estándar para futuros cambios. Si falla → realizar
-  una sesión de co-diseño del formato con la secretaria antes de implementar, y
-  documentar los criterios de aceptación de forma más granular.
-
----
-
-### [H-04] Estabilidad de lineamientos del Ministerio — riesgo: medio
-
-- **Supuesto a probar:** Los lineamientos académicos del Ministerio de Educación
-  no cambiarán durante el ciclo de desarrollo del módulo, de modo que las escalas
-  y formatos diseñados serán válidos al momento de la entrega.
-- **Hipótesis:** Creemos que los lineamientos vigentes del Ministerio se mantendrán
-  estables durante el ciclo de desarrollo (máximo 3 meses), si se verifica la fecha
-  de la última actualización oficial y se consulta con la rectora si hay cambios
-  previstos para el período 2025-2026, porque actuar sobre lineamientos ya
-  desactualizados invalida el trabajo de plantillas.
-- **Señal medible:** Número de cambios de lineamientos oficiales del Ministerio de
-  Educación notificados o publicados durante los 3 meses de desarrollo del módulo.
-- **Criterio de éxito:** 0 cambios de lineamientos notificados en los próximos 3
-  meses según la consulta inicial.
-- **Experimento:** Entrevista dirigida a la rectora sobre la agenda de cambios del
-  Ministerio, complementada con revisión del portal oficial de Educación para
-  detectar circulares o resoluciones pendientes. Tipo: entrevista / consulta
-  dirigida.
-- **Caja de tiempo/costo:** Máximo 2 horas de consulta.
-- **Regla de decisión:** Si pasa (0 cambios previstos) → diseñar las plantillas
-  con las escalas actuales vigentes. Si falla → diseñar las plantillas con un
-  mecanismo de configuración de escalas versionado, priorizando la parametrización
-  sobre la codificación directa.
+- **Supuesto a probar:** La inconsistencia en los nombres de las materias es la causa principal de las devoluciones; eliminarla permitirá que ≥ 90 % de los cuadros sean aprobados en la primera revisión.
+- **Hipótesis:** Creemos que la secretaria aprobará los cuadros en la primera revisión si los nombres de las materias son consistentes entre cuadro de calificaciones, cuadro final y acta de promoción, porque la mayoría de las devoluciones registradas en las entrevistas son por discrepancias de nombres, no por errores de datos académicos ni de layout.
+- **Señal medible:** Número de causas de devolución distintas identificadas por la secretaria al revisar reportes de muestra con nombres de materias alineados manualmente.
+- **Criterio de éxito:** 0 devoluciones por nombres incorrectos y ≤ 1 devolución por otra causa, al revisar un set de 3 reportes de muestra (trimestral + final + acta de promoción del mismo nivel) en sesión controlada de 1 hora.
+- **Experimento:** Revisión de prototipo en papel — el desarrollador prepara manualmente 3 reportes de muestra con nombres de materias consistentes (alineados a mano sin cambiar el sistema); la secretaria los revisa como si fueran entrega real y señala qué correcciones haría.
+- **Caja de tiempo/costo:** ½ día del desarrollador para preparar los reportes de muestra + 1 hora de la secretaria.
+- **Regla de decisión:** Si pasa (0 devoluciones por nombres, ≤ 1 por otra causa) → confirmar que el MVP puede comprometerse con la métrica de 90 % de primera revisión. Si falla (se identifican otros bloqueadores frecuentes además de los nombres) → ampliar el scope del MVP para cubrir esas causas antes de comprometerse con la métrica; revisar los criterios de aceptación de US-01 a US-05.

@@ -94,49 +94,16 @@ def is_vanity_metric(metric):
     return any(pat in flat for pat in VANITY_PATTERNS)
 
 
-def main():
-    try:
-        payload = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError):
-        allow()
-
-    file_path = (payload.get("tool_input", {}) or {}).get("file_path", "") or ""
-    target = os.path.basename(file_path)
-    if target not in GATED_FILES:
-        allow()
-
-    cwd = payload.get("cwd") or os.getcwd()
-    outputs_dir = resolve_outputs_dir(file_path, cwd)
-    if outputs_dir is None:
-        allow()
-
-    board_path = os.path.join(outputs_dir, "experiment-board.json")
-    mvp_path = os.path.join(outputs_dir, "mvp-canvas.md")
-
-    if not os.path.exists(mvp_path):
-        fail([
-            f"  Falta {os.path.relpath(mvp_path, cwd)}.",
-            "  Corre primero  /discovery:generate-mvp <discovery>  para tener supuestos que probar.",
-        ])
-
-    if not os.path.exists(board_path):
-        fail([
-            f"  Falta {os.path.relpath(board_path, cwd)}.",
-            "  /discovery:experiments debe escribir el tablero (board) antes que el .md.",
-        ])
-
-    try:
-        with open(board_path, encoding="utf-8") as fh:
-            board = json.load(fh)
-    except (OSError, json.JSONDecodeError, ValueError) as exc:
-        fail([f"  experiment-board.json no es JSON válido: {exc}"])
-
-    hypotheses = board.get("hypotheses", [])
+def validate_board(board):
+    hypotheses = board.get("hypotheses", []) if isinstance(board, dict) else []
     if not hypotheses:
-        fail(["  El tablero no contiene ninguna hipótesis."])
+        return ["  El tablero no contiene ninguna hipótesis."]
 
     problems = []
     for h in hypotheses:
+        if not isinstance(h, dict):
+            problems.append("  • Hay una hipótesis con formato inválido (debe ser un objeto JSON).")
+            continue
         hid = h.get("id", "(sin id)")
         for field, label in REQUIRED_FIELDS.items():
             if not str(h.get(field, "")).strip():
@@ -162,6 +129,60 @@ def main():
                 f"  • {hid}: «{metric}» es una métrica de vanidad. "
                 f"Usa una métrica de negocio (prueba ácida: si sube, ¿qué decisión cambia?)."
             )
+    return problems
+
+
+def main():
+    try:
+        payload = json.load(sys.stdin)
+    except (json.JSONDecodeError, ValueError):
+        allow()
+
+    file_path = (payload.get("tool_input", {}) or {}).get("file_path", "") or ""
+    target = os.path.basename(file_path)
+    if target not in GATED_FILES:
+        allow()
+
+    cwd = payload.get("cwd") or os.getcwd()
+    outputs_dir = resolve_outputs_dir(file_path, cwd)
+    if outputs_dir is None:
+        allow()
+
+    board_path = os.path.join(outputs_dir, "experiment-board.json")
+    mvp_path = os.path.join(outputs_dir, "mvp-canvas.md")
+
+    if not os.path.exists(mvp_path):
+        fail([
+            f"  Falta {os.path.relpath(mvp_path, cwd)}.",
+            "  Corre primero  /discovery:generate-mvp <discovery>  para tener supuestos que probar.",
+        ])
+
+    # En una creación inicial PreToolUse corre antes de que exista el archivo.
+    # Write aporta el contenido propuesto: se valida ese JSON en vez de dejar
+    # pasar un tablero inválido solo porque aún no está en disco.
+    if not os.path.exists(board_path):
+        if target == "experiment-board.json":
+            candidate = (payload.get("tool_input", {}) or {}).get("content", "")
+            try:
+                candidate_board = json.loads(candidate)
+            except (TypeError, json.JSONDecodeError, ValueError) as exc:
+                fail([f"  El experiment-board.json inicial no es JSON válido: {exc}"])
+            problems = validate_board(candidate_board)
+            if problems:
+                fail(problems)
+            allow()
+        fail([
+            f"  Falta {os.path.relpath(board_path, cwd)}.",
+            "  /discovery:experiments debe escribir primero un experiment-board.json válido.",
+        ])
+
+    try:
+        with open(board_path, encoding="utf-8") as fh:
+            board = json.load(fh)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        fail([f"  experiment-board.json no es JSON válido: {exc}"])
+
+    problems = validate_board(board)
 
     if problems:
         fail(problems)

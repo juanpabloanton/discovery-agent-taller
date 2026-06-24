@@ -1,19 +1,21 @@
 {
   "personas": [
+    { "name": "Secretaria", "role": "secretaria", "primary": true },
     { "name": "Desarrollador", "role": "desarrollador", "primary": true },
-    { "name": "Rectora",       "role": "rectora",       "primary": true },
-    { "name": "Secretaria",    "role": "secretaria",    "primary": true }
+    { "name": "Rectora", "role": "rectora", "primary": true }
   ],
   "pains": [
-    { "id": "sp-no-mantenibles",                  "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "plantillas-no-dinamicas",             "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "rdlc-por-curso",                      "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "informacion-no-centralizada",         "source": "rectora.md",       "persona": "Rectora"       },
-    { "id": "documentos-urgentes-sin-entregar",    "source": "rectora.md",       "persona": "Rectora"       },
-    { "id": "dos-sistemas-duplicados",             "source": "rectora.md",       "persona": "Rectora"       },
-    { "id": "cambio-dana-otro-reporte",            "source": "secretaria.md",    "persona": "Secretaria"    },
-    { "id": "proceso-requerimientos-sin-claridad", "source": "secretaria.md",    "persona": "Secretaria"    },
-    { "id": "nombres-materias-quemados",           "source": "secretaria.md",    "persona": "Secretaria"    },
-    { "id": "formato-reporte-inadecuado",          "source": "secretaria.md",    "persona": "Secretaria"    }
+    { "id": "ciclo-revision-errores", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "nombres-materias-inconsistentes", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "requerimientos-sin-proceso", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "promociones-word-quemadas", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "sp-inmantenibles", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "rdlc-por-curso", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "editor-rdlc-fragil", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "materias-quemadas", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "bd-sin-esquema", "source": "rectora.md", "persona": "Rectora" },
+    { "id": "codigo-no-mantenible", "source": "rectora.md", "persona": "Rectora" },
+    { "id": "dos-sistemas-ineficientes", "source": "rectora.md", "persona": "Rectora" },
+    { "id": "mineduc-lineamientos-cambiantes", "source": "rectora.md", "persona": "Rectora" }
   ]
 }

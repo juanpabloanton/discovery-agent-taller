@@ -3,42 +3,32 @@
     {
       "id": "H-01",
       "risk": "alto",
-      "assumption": "La migración de calificaciones del esquema fragmentado actual al esquema centralizado puede realizarse sin pérdida ni corrupción de datos.",
-      "hypothesis": "Creemos que el equipo de desarrollo podrá migrar el 100% de los registros de calificaciones sin pérdida ni error de integridad, si realiza una auditoría de las tablas fuente y un dry-run de migración sobre una copia del esquema antiguo, porque si los datos en origen tienen inconsistencias estructurales ningún script de migración las resolverá automáticamente.",
-      "metric": "Porcentaje de registros de calificaciones migrados correctamente sin errores de integridad referencial respecto al total de registros en el sistema antiguo.",
-      "threshold": "95% o más de los registros migrados sin errores de integridad en un ciclo de prueba de 3 días.",
-      "experiment": "Auditoría de datos + migración en seco (dry run): ejecutar el script de migración sobre una copia del esquema antiguo y comparar el conteo y los valores de calificaciones antes y después.",
-      "decision": "Si pasa (>= 95% sin errores) → continuar con la migración real al esquema nuevo; si falla → auditar las tablas fuente para identificar inconsistencias, agregar scripts de limpieza al plan y repetir el dry-run antes de migrar en producción."
+      "assumption": "Los nombres de las materias en la base de datos actual son suficientemente correctos para usarse directamente como fuente única de verdad en todos los reportes, sin limpieza previa masiva.",
+      "hypothesis": "Creemos que la secretaria aceptará los nombres de materias extraídos dinámicamente de la BD si el desarrollador audita y corrige las discrepancias antes de la primera entrega, porque el problema actual es que los nombres están quemados (no se actualizan), no que la BD tenga datos fundamentalmente erróneos.",
+      "metric": "Porcentaje de nombres de materias en la BD que coinciden con los esperados por la secretaria para los cuadros del período 2025-2026",
+      "threshold": "≥ 85 % de nombres coinciden o requieren solo corrección menor (capitalización o tildes), verificado en sesión de auditoría de 2 horas",
+      "experiment": "Auditoría de datos dirigida — el desarrollador extrae la lista de materias de las tablas más usadas en los SP y la presenta a la secretaria para validación nombre a nombre",
+      "decision": "Si pasa (≥ 85 % aceptables) → centralizar esos nombres como fuente maestra y corregir el resto antes de generar los reportes. Si falla (< 85 % requieren corrección significativa) → construir primero una interfaz de administración de materias antes de activar la extracción dinámica; no usar la BD actual sin limpieza previa."
     },
     {
       "id": "H-02",
       "risk": "alto",
-      "assumption": "El equipo de dos desarrolladores puede completar el módulo de reportes dinámicos y la migración de BD antes del cierre del período 2025-2026, trabajando en paralelo con las entregas urgentes actuales.",
-      "hypothesis": "Creemos que el equipo de dos desarrolladores completará el módulo de reportes dinámicos dentro del plazo del período 2025-2026, si se desglosan las tareas en unidades de 2 días y se traza una ruta crítica explícita, porque sin un plan detallado no es posible detectar a tiempo si el ritmo actual lleva a un incumplimiento.",
-      "metric": "Número de días de retraso acumulado sobre la ruta crítica del módulo al finalizar la primera semana de desarrollo activo.",
-      "threshold": "0 días de retraso acumulado al cierre de la primera semana de desarrollo; la ruta crítica cabe en el plazo real disponible.",
-      "experiment": "Sprint de estimación de 1 día: los dos desarrolladores desglosan las tareas del módulo en sub-tareas de máximo 2 días, estiman la ruta crítica y la comparan con la fecha límite real del cierre de período.",
-      "decision": "Si pasa (ruta crítica cabe en el plazo) → arrancar el desarrollo con el alcance completo; si falla → pivotar: reducir el alcance del MVP (posponer lógica de escalas complejas o nómina de abanderados) o negociar con la rectora un plazo mayor antes de comprometerse."
+      "assumption": "Es posible crear una vista SQL unificada de calificaciones sobre las tablas existentes sin pérdida de datos del período 2025-2026 en curso, sin necesidad de una migración destructiva.",
+      "hypothesis": "Creemos que el desarrollador podrá recuperar el 100 % de las calificaciones del período actual desde una vista unificada si mapea las tablas existentes de cada nivel, porque aunque las tablas son inconsistentes en estructura, el dato de calificación existe en alguna tabla para cada nivel.",
+      "metric": "Porcentaje de calificaciones del período 2025-2026 recuperables correctamente (sin pérdida ni duplicados) desde la vista unificada, comparadas contra los reportes generados por el sistema actual",
+      "threshold": "100 % de calificaciones recuperadas sin pérdida ni duplicados para al menos 3 niveles distintos (básica, media, bachillerato), en un spike de 3 días",
+      "experiment": "Spike técnico — el desarrollador mapea todas las tablas de calificaciones, documenta sus relaciones y construye una vista SQL de prueba para 3 niveles; compara resultados contra cuadros generados actualmente",
+      "decision": "Si pasa (100 % de datos para ≥ 3 niveles) → avanzar con la tabla centralizada como base del MVP. Si falla (datos faltantes o duplicados) → abordar la centralización por niveles de forma incremental, priorizando los cursos de 2.° a bachillerato que van al distrito primero; posponer la centralización de inicial y básica baja."
     },
     {
       "id": "H-03",
       "risk": "medio",
-      "assumption": "La secretaria puede especificar los requerimientos de formato de los reportes con suficiente claridad para que los desarrolladores los implementen sin reversiones.",
-      "hypothesis": "Creemos que la secretaria aprobará un prototipo de reporte con un máximo de 1 ciclo de revisión, si se le presenta una plantilla de especificación estructurada con campos predefinidos (nombres de materias, escalas, ubicación de firmas y sellos, jerarquía visual), porque el historial de reversiones evidenciado proviene de requerimientos ambiguos, no de incompetencia técnica.",
-      "metric": "Número de ciclos de revisión necesarios para que la secretaria apruebe el primer prototipo de reporte sin cambios pendientes.",
-      "threshold": "1 o menos ciclos de revisión para aprobación del prototipo en un plazo de 5 días hábiles.",
-      "experiment": "Mago de Oz / Concierge: presentar a la secretaria un borrador de reporte generado con datos reales (incluso en Word o PDF manual) y recoger su feedback usando una plantilla de especificación estructurada.",
-      "decision": "Si pasa (<= 1 ciclo) → adoptar la plantilla de especificación como proceso estándar para futuros cambios; si falla → realizar una sesión de co-diseño del formato con la secretaria antes de implementar, y documentar los criterios de aceptación de forma más granular."
-    },
-    {
-      "id": "H-04",
-      "risk": "medio",
-      "assumption": "Los lineamientos académicos del Ministerio de Educación no cambiarán durante el ciclo de desarrollo del módulo, de modo que las escalas y formatos diseñados serán válidos al momento de la entrega.",
-      "hypothesis": "Creemos que los lineamientos vigentes del Ministerio se mantendrán estables durante el ciclo de desarrollo (máximo 3 meses), si se verifica la fecha de la última actualización oficial y se consulta con la rectora si hay cambios previstos para el período 2025-2026, porque actuar sobre lineamientos ya desactualizados invalida el trabajo de plantillas.",
-      "metric": "Número de cambios de lineamientos oficiales del Ministerio de Educación notificados o publicados durante los 3 meses de desarrollo del módulo.",
-      "threshold": "0 cambios de lineamientos notificados en los próximos 3 meses según la consulta inicial.",
-      "experiment": "Entrevista dirigida a la rectora sobre la agenda de cambios del Ministerio, complementada con revisión del portal oficial de Educación para detectar circulares o resoluciones pendientes.",
-      "decision": "Si pasa (0 cambios previstos) → diseñar las plantillas con las escalas actuales vigentes; si falla → diseñar las plantillas con un mecanismo de configuración de escalas versionado, priorizando la parametrización sobre la codificación directa."
+      "assumption": "La inconsistencia en los nombres de las materias es la causa principal de las devoluciones; eliminarla permitirá que ≥ 90 % de los cuadros sean aprobados en la primera revisión.",
+      "hypothesis": "Creemos que la secretaria aprobará los cuadros en la primera revisión si los nombres de las materias son consistentes entre cuadro de calificaciones, cuadro final y acta de promoción, porque la mayoría de las devoluciones registradas en las entrevistas son por discrepancias de nombres, no por errores de datos académicos ni de layout.",
+      "metric": "Número de causas de devolución distintas identificadas por la secretaria al revisar reportes de muestra con nombres de materias alineados manualmente",
+      "threshold": "0 devoluciones por nombres incorrectos y ≤ 1 devolución por otra causa, al revisar un set de 3 reportes de muestra (trimestral + final + acta de promoción del mismo nivel) en sesión controlada de 1 hora",
+      "experiment": "Revisión de prototipo en papel — el desarrollador prepara manualmente 3 reportes de muestra con nombres consistentes; la secretaria los revisa como si fueran entrega real y señala qué correcciones haría",
+      "decision": "Si pasa (0 devoluciones por nombres, ≤ 1 por otra causa) → confirmar que el MVP puede comprometerse con la métrica de 90 % de primera revisión. Si falla (se identifican otros bloqueadores frecuentes) → ampliar el scope del MVP para cubrir esas causas antes de comprometerse con la métrica; revisar los criterios de aceptación de US-01 a US-05."
     }
   ]
 }

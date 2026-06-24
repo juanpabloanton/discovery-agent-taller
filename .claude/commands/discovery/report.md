@@ -18,7 +18,7 @@ Pasos:
    produce de forma reproducible a partir de los JSON):
 
    ```bash
-   python3 .claude/scripts/build-report.py $ARGUMENTS
+   py -3 .claude/scripts/build-report.py $ARGUMENTS
    ```
 
 2. Confirma al usuario la ruta del reporte (`$ARGUMENTS/outputs/report.html`) y

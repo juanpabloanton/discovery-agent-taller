@@ -1,63 +1,61 @@
-# Requisitos candidatos — Ciencia y Fe
-
-Todos los requisitos derivan exclusivamente de evidencia en las entrevistas de este discovery.
-
----
+# Requisitos candidatos — discovery cienciayfe
 
 ## Funcionales
 
-- **[R-01]** El sistema debe generar cuadros de calificaciones trimestrales y finales leyendo los nombres de las materias dinámicamente desde la base de datos, sin valores quemados en la plantilla.
+- **[R-01]** El sistema debe generar cuadros trimestrales de calificaciones con escala cualitativa (AA+, A-, B-) para inicial y básica hasta 4.° y cuantitativa (numérica) desde 5.° en adelante.
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria / `desarrollador.md` · Desarrollador
+  - Origen: secretaria.md · Secretaria
 
-- **[R-02]** El sistema debe garantizar que los nombres de las materias en el cuadro final coincidan automáticamente con los del cuadro trimestral y con el reporte de promoción.
+- **[R-02]** El sistema debe generar cuadros finales de calificaciones y actas de promoción por nivel educativo.
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria
+  - Origen: rectora.md, secretaria.md · Rectora, Secretaria
 
-- **[R-03]** El sistema debe proveer una plantilla única de reporte (cuadro trimestral, final y promoción) reutilizable y configurable por curso, sin necesidad de duplicar archivos RDLC o Word por nivel.
+- **[R-03]** Los reportes deben reservar espacio para la firma del docente y para dos sellos: uno del colegio y uno del distrito educativo.
   - Tipo: funcional
-  - Origen: `desarrollador.md` · Desarrollador / `rectora.md` · Rectora
+  - Origen: secretaria.md · Secretaria
 
-- **[R-04]** El sistema debe implementar un esquema de base de datos centralizado para calificaciones, con una sola tabla unificada que sirva a todos los cursos y reportes.
+- **[R-04]** Los nombres de las materias en todos los reportes deben extraerse dinámicamente de la base de datos; no deben estar codificados en las plantillas RDLC ni en los documentos Word.
   - Tipo: funcional
-  - Origen: `rectora.md` · Rectora / `desarrollador.md` · Desarrollador
+  - Origen: desarrollador.md, secretaria.md · Desarrollador, Secretaria
 
-- **[R-05]** El sistema debe diferenciar las escalas de calificación por nivel educativo: cualitativa en inicial, simbólica (+A / -A / B−) hasta segundo grado, y cuantitativa de tercero en adelante; y debe aplicar las escalas de comportamiento correspondientes a cada nivel.
+- **[R-05]** Debe existir una tabla centralizada de calificaciones que unifique los datos de todos los niveles educativos (inicial, básica, bachillerato).
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria
+  - Origen: rectora.md, desarrollador.md · Rectora, Desarrollador
 
-- **[R-06]** Los reportes de cuadros y promociones deben incluir espacios designados para la firma del docente y dos sellos (colegio y distrito).
+- **[R-06]** Las plantillas de reportes (cuadros y promociones) deben ser reutilizables y configurables por nivel, sin necesidad de una plantilla distinta por cada curso.
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria / `rectora.md` · Rectora
+  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
 
-- **[R-07]** El sistema debe generar la nómina de estudiantes abanderados para el período 2026-2027.
+- **[R-07]** El sistema debe generar la nómina de estudiantes abanderados del período 2026-2027.
   - Tipo: funcional
-  - Origen: `rectora.md` · Rectora
+  - Origen: rectora.md · Rectora
 
-- **[R-08]** El sistema debe consolidar los dos sistemas existentes (interno y externo) en uno solo, eliminando la duplicidad de mantenimiento.
+- **[R-08]** Debe existir un canal formal para registrar, confirmar y hacer seguimiento de los requerimientos de cambio en reportes, evitando retrabajo por malentendidos.
   - Tipo: funcional
-  - Origen: `rectora.md` · Rectora
+  - Origen: secretaria.md, desarrollador.md · Secretaria, Desarrollador
 
-- **[R-09]** El sistema debe proveer un mecanismo formal (flujo de aprobación o especificación estructurada) para que secretaría comunique requerimientos de cambio en reportes al equipo de desarrollo.
+- **[R-09]** El nuevo sistema debe consolidar los sistemas interno y externo actuales en una sola plataforma, eliminando la duplicidad operativa.
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria / `desarrollador.md` · Desarrollador
+  - Origen: rectora.md · Rectora
 
-- **[R-10]** Los cuadros de comportamiento y sus escalas informativas deben mostrarse con una jerarquía visual menor que los datos de calificaciones, de modo que no ocupen espacio excesivo en el reporte.
+- **[R-10]** Los cuadros de comportamiento deben presentarse con escala visual reducida para no opacar la información académica principal.
   - Tipo: funcional
-  - Origen: `secretaria.md` · Secretaria
-
----
+  - Origen: secretaria.md · Secretaria
 
 ## No funcionales
 
-- **[R-11]** El sistema debe ser mantenible: cualquier cambio en plantillas, nombres de materias o escalas debe realizarse en un único punto y propagarse a todos los reportes (principio DRY).
+- **[R-11]** El sistema debe cumplir con la Ley Orgánica de Protección de Datos Personales del Ecuador.
   - Tipo: no funcional
-  - Origen: `desarrollador.md` · Desarrollador / `rectora.md` · Rectora
+  - Origen: rectora.md · Rectora
 
-- **[R-12]** El sistema debe cumplir la Ley de Protección de Datos Personales vigente en la jurisdicción de la institución.
+- **[R-12]** La arquitectura del sistema debe ser mantenible: sin duplicación de lógica de negocio, con componentes desacoplados y lógica de reportes parametrizable (sin SP de miles de líneas ni plantillas quemadas).
   - Tipo: no funcional
-  - Origen: `rectora.md` · Rectora
+  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
 
-- **[R-13]** Los módulos del sistema nuevo deben desplegarse como contenedores Docker con un archivo `docker-compose` que permita levantar el ecosistema completo en un solo comando.
+- **[R-13]** El sistema debe desplegarse mediante contenedores Docker con soporte de integración y entrega continua (CI/CD) en dos servidores Ubuntu.
   - Tipo: no funcional
-  - Origen: `desarrollador.md` · Desarrollador / `rectora.md` · Rectora
+  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
+
+- **[R-14]** El sistema debe adaptarse a cambios en los lineamientos del Ministerio de Educación sin requerir modificación masiva de plantillas o código.
+  - Tipo: no funcional
+  - Origen: rectora.md, secretaria.md · Rectora, Secretaria

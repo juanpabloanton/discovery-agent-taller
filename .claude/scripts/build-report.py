@@ -11,9 +11,9 @@ output, sin depender del modelo. Misma filosofía que los hooks: lógica en cód
 
 USO
 ===
-    python3 .claude/scripts/build-report.py <carpeta-del-discovery>
+    py -3 .claude/scripts/build-report.py <carpeta-del-discovery>
     # p. ej.
-    python3 .claude/scripts/build-report.py discoveries/citasalud
+    py -3 .claude/scripts/build-report.py discoveries/citasalud
 
 Codificación de color (leyenda en el propio reporte):
 - Respaldo de persona:  primera mano = verde · referenciada = ámbar
@@ -238,7 +238,7 @@ def build(discovery_dir):
 
 def main():
     if len(sys.argv) < 2:
-        print("Uso: python3 build-report.py <carpeta-del-discovery>", file=sys.stderr)
+        print("Uso: py -3 build-report.py <carpeta-del-discovery>", file=sys.stderr)
         sys.exit(1)
     discovery_dir = sys.argv[1]
     out_dir = os.path.join(discovery_dir, "outputs")
