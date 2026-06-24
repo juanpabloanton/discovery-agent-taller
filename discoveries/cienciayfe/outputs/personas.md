@@ -1,86 +1,86 @@
-# Personas — discovery cienciayfe
+# Personas — Ciencia y Fe
 
 ```mermaid
 flowchart LR
-  classDef src fill:#E2EAF3,stroke:#1A4E8A,color:#0E1A26;
-  classDef per fill:#FBFCFA,stroke:#1A4E8A,color:#0E1A26;
+  classDef src  fill:#E2EAF3,stroke:#1A4E8A,color:#0E1A26;
+  classDef per  fill:#E3F1E8,stroke:#2E7D52,color:#0E1A26;
+  classDef ref  fill:#FDF3DC,stroke:#9A6605,color:#0E1A26;
   classDef pain fill:#F6E3BC,stroke:#9A6605,color:#0E1A26;
 
-  SEC[secretaria.md]:::src --> P1[Secretaria]:::per
-  P1 --> D1[ciclo-revision-errores]:::pain
-  P1 --> D2[nombres-materias-inconsistentes]:::pain
-  P1 --> D3[requerimientos-sin-proceso]:::pain
-  P1 --> D4[promociones-word-quemadas]:::pain
+  S[secretaria.md]:::src   --> PS[Secretaria]:::per
+  D[desarrollador.md]:::src --> PD[Desarrollador]:::per
+  R[rectora.md]:::src      --> PR[Rectora]:::per
+  R -->|solo menciona| DOC[Docente]:::ref
 
-  DEV[desarrollador.md]:::src --> P2[Desarrollador]:::per
-  P2 --> D5[sp-inmantenibles]:::pain
-  P2 --> D6[rdlc-por-curso]:::pain
-  P2 --> D7[editor-rdlc-fragil]:::pain
-  P2 --> D8[materias-quemadas]:::pain
+  PS --> PA1[materias-quemadas]:::pain
+  PS --> PA6[reproceso-sin-proceso-de-requerimiento]:::pain
+  PS --> PA8[plantillas-word-quemadas-promociones]:::pain
 
-  REC[rectora.md]:::src --> P3[Rectora]:::per
-  P3 --> D9[bd-sin-esquema]:::pain
-  P3 --> D10[codigo-no-mantenible]:::pain
-  P3 --> D11[dos-sistemas-ineficientes]:::pain
-  P3 --> D12[mineduc-lineamientos-cambiantes]:::pain
+  PD --> PA3[sp-no-mantenibles]:::pain
+  PD --> PA4[rdlc-por-curso]:::pain
+  PD --> PA5[reportes-no-dinamicos]:::pain
+
+  PR --> PA2[inconsistencia-bd]:::pain
+  PR --> PA7[documentos-urgentes-cierre-ano]:::pain
+  PR --> PA9[doble-sistema-ineficiencia]:::pain
 ```
 
 ---
 
-## Personas
+## Personas (actores con entrevista propia)
 
 ### Secretaria — secretaria
-
-- **Contexto:** Funcionaria de secretaría que gestiona y valida los cuadros de calificaciones, actas de promoción y documentos oficiales que el colegio envía al distrito educativo.
-- **Objetivo principal:** Obtener reportes académicos correctos, con información consistente entre sí y con el formato exigido por el Ministerio de Educación, para entregarlos a tiempo al distrito.
+- **Contexto:** funcionaria de secretaría de la institución educativa; usa el sistema para generar y verificar cuadros de calificaciones (trimestrales, finales) y reportes de promociones destinados al distrito.
+- **Objetivo principal:** disponer de reportes correctos, coherentes y a tiempo, sin tener que devolverlos repetidamente por errores.
 - **Dolores:**
-  - Arreglar un cuadro daña otro; ciclo interminable de devoluciones y correcciones. (secretaria.md)
-  - Los nombres de las materias no coinciden entre el cuadro de calificaciones, el cuadro final y el de promociones. (secretaria.md)
-  - No existe un proceso formal para comunicar requerimientos de cambio; los malentendidos generan retrabajo de semanas. (secretaria.md)
-  - Las plantillas de promoción en Word tienen materias quemadas y se llenan por posicionamiento, sin lógica robusta; son frágiles ante cualquier cambio. (secretaria.md)
-- **Respaldo:** `primera mano` (secretaria.md)
+  - Los nombres de las materias en los reportes RDLC están quemados manualmente y no coinciden con la base de datos. (`secretaria.md`)
+  - Arreglar un reporte rompe otro por inconsistencias en la BD y en los SP. (`secretaria.md`)
+  - Las materias de los reportes de promoción deben coincidir con los cuadros de calificación, pero el llenado es por posicionamiento y genera inconsistencias. (`secretaria.md`)
+  - No existe un proceso claro para solicitar cambios: los requerimientos se malinterpretan, se invierten semanas y después hay que revertir. (`secretaria.md`)
+  - Los documentos de cierre 2025-2026 deben entregarse urgentemente al distrito con firmas y sellos. (`secretaria.md`, `rectora.md`)
+- **Respaldo:** `primera mano` — entrevista `secretaria.md`.
 
 ---
 
 ### Desarrollador — desarrollador
-
-- **Contexto:** Desarrollador(es) que mantiene el sistema académico actual (.NET ASP / SQL Server) y, en paralelo, construye la infraestructura del sistema nuevo (Java / Spring Boot / PostgreSQL).
-- **Objetivo principal:** Entregar los reportes urgentes del período 2025-2026 y sentar las bases de un sistema nuevo mantenible que elimine la deuda técnica acumulada.
+- **Contexto:** equipo de dos desarrolladores (D1 y D2) que mantienen el sistema académico .NET/SQL Server y construyen en paralelo el sistema nuevo.
+- **Objetivo principal:** entregar los reportes urgentes con el sistema actual y avanzar en un sistema nuevo mantenible.
 - **Dolores:**
-  - Stored Procedures de hasta 30 000 líneas con IFs anidados, no reutilizables; arreglar uno puede dañar otro. (desarrollador.md)
-  - Cada curso tiene su propio RDLC; cualquier cambio requiere modificar múltiples archivos de forma manual. (desarrollador.md)
-  - El editor RDLC no es amigable: mover un elemento desplaza todo el layout. (desarrollador.md)
-  - Los nombres de las materias están quemados en el RDLC y no coinciden con los de la base de datos, lo que impide hacer los reportes dinámicos. (desarrollador.md)
-- **Respaldo:** `primera mano` (desarrollador.md)
+  - SP de hasta 30 000 líneas con `if` anidados; un SP llama a otro; corregir uno rompe otro. (`desarrollador.md`)
+  - Cada curso tiene su propio RDLC; el editor no es amigable y mover un elemento desacomoda todo el reporte. (`desarrollador.md`)
+  - Los nombres de materias están quemados en RDLC y plantillas Word; no coinciden con la BD, lo que impide hacer reportes dinámicos. (`desarrollador.md`)
+  - Las diez plantillas Word de promociones tienen materias quemadas y el llenado es por posicionamiento, sin lógica de datos. (`secretaria.md`)
+  - Sin estandarización: cada curso tiene plantillas distintas; modificar uno requiere cambios en múltiples archivos. (`desarrollador.md`)
+- **Respaldo:** `primera mano` — entrevista `desarrollador.md`.
 
 ---
 
 ### Rectora — rectora
-
-- **Contexto:** Autoridad institucional que define prioridades, supervisa a los desarrolladores y establece la dirección técnica y académica del nuevo sistema.
-- **Objetivo principal:** Entregar los documentos del período 2025-2026 (cuadros trimestrales, finales y promociones) con urgencia y reemplazar el sistema actual por uno mantenible, escalable y conforme a la normativa vigente.
+- **Contexto:** directora de la institución educativa; define las prioridades del sistema, coordina con los desarrolladores y responde ante el Ministerio de Educación y el distrito.
+- **Objetivo principal:** garantizar los entregables urgentes de cierre de año 2025-2026 y luego reemplazar el sistema actual por uno mantenible.
 - **Dolores:**
-  - La base de datos carece de esquema centralizado: tablas inconsistentes entre sí y sin una sola tabla de calificaciones para todos los niveles. (rectora.md)
-  - El código no es mantenible: SP que llaman a otros SP, queries mal generados; corregir algo daña otra parte. (rectora.md)
-  - Existen dos sistemas (interno y externo) en paralelo que generan ineficiencia operativa. (rectora.md)
-  - El Ministerio de Educación cambia lineamientos con frecuencia y el sistema no tiene un mecanismo para adaptarse sin retrabajo masivo. (rectora.md)
-- **Respaldo:** `primera mano` (rectora.md)
+  - El sistema tiene código no mantenible: SP de 30k líneas, BD sin esquema centralizado y consultas mal generadas. (`rectora.md`)
+  - No existe una sola tabla de calificaciones; la información está dispersa en tablas sin esquema claro. (`rectora.md`)
+  - El Ministerio de Educación cambia sus lineamientos y no ha existido un estándar; cada cambio obliga a modificar múltiples archivos por curso. (`rectora.md`)
+  - Hay dos sistemas (interno y externo) que generan ineficiencia; la rectora quiere dar de baja el externo. (`rectora.md`)
+- **Respaldo:** `primera mano` — entrevista `rectora.md`.
+
+---
+
+### Docente — docente
+- **Contexto:** docentes de la institución, mencionados como firmantes de los cuadros de calificaciones y reportes enviados al distrito.
+- **Objetivo principal:** no evidenciado; no existe entrevista propia.
+- **Dolores:** sin evidencia de primera mano.
+- **Respaldo:** `referenciada` — mencionado en `rectora.md`; no existe entrevista de primera mano.
 
 ---
 
 ## Stakeholders
 
 ### Ministerio de Educación
-
-- **Interés en el sistema:** Define los formatos y lineamientos académicos (escalas de calificación, estructura de cuadros) que los reportes deben cumplir. Su cambio frecuente de normativa es causa directa de la inestabilidad de las plantillas.
-- **Fuente:** rectora.md
+- **Interés en el sistema:** define los lineamientos académicos y los estándares documentales que el sistema debe cumplir; sus cambios frecuentes obligan a actualizaciones en plantillas y lógica de reportes.
+- **Fuente:** `rectora.md`, `secretaria.md`.
 
 ### Distrito educativo
-
-- **Interés en el sistema:** Recibe y sella los reportes oficiales (cuadros trimestrales, finales y actas de promoción de 2.° a bachillerato). Es el destinatario externo más crítico en el corto plazo.
-- **Fuente:** secretaria.md, rectora.md
-
-### Docente
-
-- **Interés en el sistema:** Firma los cuadros de calificaciones y actas de promoción antes de que sean sellados por el distrito; su firma es requisito obligatorio en cada documento.
-- **Fuente:** rectora.md
+- **Interés en el sistema:** receptor oficial de los cuadros de calificaciones y reportes de promociones firmados y sellados; exige los documentos en los plazos establecidos.
+- **Fuente:** `secretaria.md`, `rectora.md`.

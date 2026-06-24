@@ -2,20 +2,18 @@
   "personas": [
     { "name": "Secretaria", "role": "secretaria", "primary": true },
     { "name": "Desarrollador", "role": "desarrollador", "primary": true },
-    { "name": "Rectora", "role": "rectora", "primary": true }
+    { "name": "Rectora", "role": "rectora", "primary": true },
+    { "name": "Docente", "role": "docente", "primary": false }
   ],
   "pains": [
-    { "id": "ciclo-revision-errores", "source": "secretaria.md", "persona": "Secretaria" },
-    { "id": "nombres-materias-inconsistentes", "source": "secretaria.md", "persona": "Secretaria" },
-    { "id": "requerimientos-sin-proceso", "source": "secretaria.md", "persona": "Secretaria" },
-    { "id": "promociones-word-quemadas", "source": "secretaria.md", "persona": "Secretaria" },
-    { "id": "sp-inmantenibles", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "materias-quemadas", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "inconsistencia-bd", "source": "rectora.md", "persona": "Rectora" },
+    { "id": "sp-no-mantenibles", "source": "desarrollador.md", "persona": "Desarrollador" },
     { "id": "rdlc-por-curso", "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "editor-rdlc-fragil", "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "materias-quemadas", "source": "desarrollador.md", "persona": "Desarrollador" },
-    { "id": "bd-sin-esquema", "source": "rectora.md", "persona": "Rectora" },
-    { "id": "codigo-no-mantenible", "source": "rectora.md", "persona": "Rectora" },
-    { "id": "dos-sistemas-ineficientes", "source": "rectora.md", "persona": "Rectora" },
-    { "id": "mineduc-lineamientos-cambiantes", "source": "rectora.md", "persona": "Rectora" }
+    { "id": "reportes-no-dinamicos", "source": "desarrollador.md", "persona": "Desarrollador" },
+    { "id": "reproceso-sin-proceso-de-requerimiento", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "documentos-urgentes-cierre-ano", "source": "rectora.md", "persona": "Rectora" },
+    { "id": "plantillas-word-quemadas-promociones", "source": "secretaria.md", "persona": "Secretaria" },
+    { "id": "doble-sistema-ineficiencia", "source": "rectora.md", "persona": "Rectora" }
   ]
 }

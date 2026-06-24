@@ -1,61 +1,57 @@
-# Requisitos candidatos — discovery cienciayfe
+# Requisitos candidatos — Ciencia y Fe
 
 ## Funcionales
 
-- **[R-01]** El sistema debe generar cuadros trimestrales de calificaciones con escala cualitativa (AA+, A-, B-) para inicial y básica hasta 4.° y cuantitativa (numérica) desde 5.° en adelante.
+- **[R-01]** El sistema debe generar cuadros de calificaciones trimestrales y quimestrales de forma dinámica para todos los cursos, con nombres de materias obtenidos de la base de datos (no quemados en plantillas).
   - Tipo: funcional
-  - Origen: secretaria.md · Secretaria
+  - Origen: `secretaria.md`, `rectora.md` · Secretaria, Rectora
 
-- **[R-02]** El sistema debe generar cuadros finales de calificaciones y actas de promoción por nivel educativo.
+- **[R-02]** El sistema debe generar cuadros finales de calificaciones de forma dinámica, coherentes con los cuadros trimestrales del mismo período.
   - Tipo: funcional
-  - Origen: rectora.md, secretaria.md · Rectora, Secretaria
+  - Origen: `secretaria.md`, `rectora.md` · Secretaria, Rectora
 
-- **[R-03]** Los reportes deben reservar espacio para la firma del docente y para dos sellos: uno del colegio y uno del distrito educativo.
+- **[R-03]** El sistema debe generar reportes de promociones cuyos nombres de materias coincidan exactamente con los del cuadro de calificación y provengan de la base de datos (sin llenado por posicionamiento).
   - Tipo: funcional
-  - Origen: secretaria.md · Secretaria
+  - Origen: `secretaria.md` · Secretaria
 
-- **[R-04]** Los nombres de las materias en todos los reportes deben extraerse dinámicamente de la base de datos; no deben estar codificados en las plantillas RDLC ni en los documentos Word.
+- **[R-04]** Los reportes deben incluir espacio reservado para la firma del docente y dos sellos (colegio y distrito).
   - Tipo: funcional
-  - Origen: desarrollador.md, secretaria.md · Desarrollador, Secretaria
+  - Origen: `secretaria.md` · Secretaria
 
-- **[R-05]** Debe existir una tabla centralizada de calificaciones que unifique los datos de todos los niveles educativos (inicial, básica, bachillerato).
+- **[R-05]** El sistema debe soportar escalas de calificación diferenciadas por nivel: cualitativa (+A / -A / B-) para inicial y básica elemental (hasta 2.º), y cuantitativa (numérica) para básica media en adelante (desde 3.º); con escalas de comportamiento configurables por nivel.
   - Tipo: funcional
-  - Origen: rectora.md, desarrollador.md · Rectora, Desarrollador
+  - Origen: `secretaria.md` · Secretaria
 
-- **[R-06]** Las plantillas de reportes (cuadros y promociones) deben ser reutilizables y configurables por nivel, sin necesidad de una plantilla distinta por cada curso.
+- **[R-06]** El sistema debe usar plantillas de reporte parametrizadas y reutilizables entre cursos; no una plantilla RDLC o Word separada por curso.
   - Tipo: funcional
-  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
+  - Origen: `desarrollador.md`, `rectora.md` · Desarrollador, Rectora
 
-- **[R-07]** El sistema debe generar la nómina de estudiantes abanderados del período 2026-2027.
+- **[R-07]** La base de datos debe centralizar las calificaciones en un esquema unificado y coherente que sirva a todos los cursos y tipos de reporte.
   - Tipo: funcional
-  - Origen: rectora.md · Rectora
+  - Origen: `rectora.md`, `desarrollador.md` · Rectora, Desarrollador
 
-- **[R-08]** Debe existir un canal formal para registrar, confirmar y hacer seguimiento de los requerimientos de cambio en reportes, evitando retrabajo por malentendidos.
+- **[R-08]** El sistema debe generar la nómina de estudiantes abanderados para el período 2026-2027.
   - Tipo: funcional
-  - Origen: secretaria.md, desarrollador.md · Secretaria, Desarrollador
+  - Origen: `rectora.md` · Rectora
 
-- **[R-09]** El nuevo sistema debe consolidar los sistemas interno y externo actuales en una sola plataforma, eliminando la duplicidad operativa.
+- **[R-09]** El sistema debe unificar los sistemas interno y externo actuales en una sola plataforma.
   - Tipo: funcional
-  - Origen: rectora.md · Rectora
+  - Origen: `rectora.md` · Rectora
 
-- **[R-10]** Los cuadros de comportamiento deben presentarse con escala visual reducida para no opacar la información académica principal.
+- **[R-10]** Debe existir un flujo documentado para que secretaría solicite, especifique y valide cambios en reportes antes de que desarrollo los implemente.
   - Tipo: funcional
-  - Origen: secretaria.md · Secretaria
+  - Origen: `secretaria.md` · Secretaria
 
 ## No funcionales
 
-- **[R-11]** El sistema debe cumplir con la Ley Orgánica de Protección de Datos Personales del Ecuador.
+- **[R-11]** El sistema debe cumplir con la Ley de Protección de Datos Personales vigente en Ecuador.
   - Tipo: no funcional
-  - Origen: rectora.md · Rectora
+  - Origen: `rectora.md` · Rectora
 
-- **[R-12]** La arquitectura del sistema debe ser mantenible: sin duplicación de lógica de negocio, con componentes desacoplados y lógica de reportes parametrizable (sin SP de miles de líneas ni plantillas quemadas).
+- **[R-12]** El código y los SP del sistema deben ser mantenibles: sin lógica de posicionamiento, sin materias quemadas, sin SP de más de un nivel de anidación razonable, y con responsabilidades separadas.
   - Tipo: no funcional
-  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
+  - Origen: `desarrollador.md`, `rectora.md` · Desarrollador, Rectora
 
-- **[R-13]** El sistema debe desplegarse mediante contenedores Docker con soporte de integración y entrega continua (CI/CD) en dos servidores Ubuntu.
+- **[R-13]** El sistema debe adaptarse a cambios en los lineamientos académicos del Ministerio de Educación mediante configuración, sin requerir modificaciones manuales archivo por archivo.
   - Tipo: no funcional
-  - Origen: desarrollador.md, rectora.md · Desarrollador, Rectora
-
-- **[R-14]** El sistema debe adaptarse a cambios en los lineamientos del Ministerio de Educación sin requerir modificación masiva de plantillas o código.
-  - Tipo: no funcional
-  - Origen: rectora.md, secretaria.md · Rectora, Secretaria
+  - Origen: `rectora.md` · Rectora
